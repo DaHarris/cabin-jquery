@@ -2,16 +2,42 @@ $(document).ready(function() {
 	console.log("The document is ready!");
 
 	var homes = $('.home');
-	var checkHomes = homes;
+	var checkHomes = [];
 	var checkBoxes = $('input:checkbox');
 	var checkValues = [];
 
-	for (var i=0;i<checkBoxes.length;i++) {
-		checkValues.push(checkBoxes[i].value);
+	function checkValuesInit() {
+		for (var i=0;i<checkBoxes.length;i++) {
+			checkValues.push(checkBoxes[i].value);
+		}
 	}
 
+
 	$('input:checkbox').change(function() {
-		selected = $('input:checked');
+		if ($('input:checked').length == 0) {
+			$('.image-container').html(homes);
+		} else {
+			checkValuesInit();
+			checkHomes = [];
+			values = $('input:checked');
+			for (var j=0;j<values.length;j++) {
+				upper = parseInt($(values[j]).attr("value"));
+				upperIndex = checkValues.indexOf(upper.toString());
+				if (upperIndex == 0) {
+					lower = 0;
+				} else {
+					lower = checkValues[upperIndex-1];
+				}
+				for (var i=0;i<homes.length;i++) {
+					price = parseInt($(homes[i]).attr("data-price"));
+					if (price < upper && price > lower) {
+						checkHomes.push(homes[i]);
+					}
+				}
+			}
+			debugger;
+			$('.image-container').html(checkHomes);
+		}
 	});
 
 	$('.low').on('click', function() {
